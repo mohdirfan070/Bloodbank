@@ -2,24 +2,28 @@
 const Donor = require('../models/Donor');
 const User = require('../models/User');
 const Admin = require('../models/Admin');
+
 const jwt = require('jsonwebtoken');
+
 const generateToken = async (email, id, isAdmin) => {
-    return jwt.sign({ email, "id": id, "isAdmin": isAdmin }, process.env.JWT_SECRET);
+    return jwt.sign({ email , "id" : id , "isAdmin": isAdmin }, process.env.JWT_SECRET);
 }
 
 
 
 const registerUser = async (req, res) => {
 
-    const { name, bloodGroup, mobile, age, email, gender, address, password, healthHistory, lastDonateDate ,user, organizationName, role, secretKey } = req.body;
+    const { name , bloodGroup, mobile, age, email, gender, address, password, healthHistory, lastDonateDate ,user, organizationName, role, secretKey } = req.body;
     //   console.log( { name, bloodGroup, mobile, age, email, gender, address, password, healthHistory, user, organizationName, role , secretKey} )
     try {
 
         if (user == "donor") {
             let donor = await Donor.findOne({ email });
+
             if (donor) {
                 return res.status(400).json({ status: false, msg: 'Email already exists!' });
             }
+
             donor = new Donor({
                 name,
                 bloodGroup,
@@ -33,6 +37,7 @@ const registerUser = async (req, res) => {
                 lastDonateDate
             });
             const newDonor = await donor.save();
+            
             const token = await generateToken(email, newDonor._id, newDonor.isAdmin);
             res.cookie('token', `Bearer ${token}`, {
                 httpOnly: true,
@@ -154,8 +159,10 @@ const Delete = async (req, res) => {
     try {
         const { id , role  } = req.params;
         // console.log(id , role)
-        const user =  role=="user"? await User.findByIdAndDelete(id) : role=="donor" ? await Donor.findByIdAndDelete(id) : await Admin.findByIdAndDelete(id) ;
+        const user =  role=="user"? await User.findByIdAndDelete(id)  : role=="donor" ? await Donor.findByIdAndDelete(id) : await Admin.findByIdAndDelete(id) ;
 
+        const result = await Request.deleteMany({ $or: [{ from: id }, { to: id }] });
+            console.log(result)
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }

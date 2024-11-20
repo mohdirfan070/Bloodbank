@@ -80,6 +80,7 @@ const UsersTable = () => {
               <TableCell>Name</TableCell>
               <TableCell>Age</TableCell>
               <TableCell>Blood Group</TableCell>
+              <TableCell>Last Donate Date</TableCell>
               <TableCell>Mobile</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Connect</TableCell>
@@ -87,7 +88,7 @@ const UsersTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredUsers && filteredUsers.map((user, index) => (
+            {filteredUsers && filteredUsers.map(( user , index) => (
               <TableRowCompo user={user} key={index + 1} index={index} update={{ updateTable, updateSetUpdateTable }} />
             ))}
           </TableBody>

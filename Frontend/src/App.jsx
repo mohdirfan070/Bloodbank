@@ -1,5 +1,5 @@
 import { createContext, useState } from 'react';
-import './App.css'
+import './App.css';
 import Footer from './components/Footer';
 import About from './pages/About/About';
 import Contact from './pages/Contact/Contact';
@@ -25,12 +25,10 @@ const getCookie = (name) => {
 
 const role =  getCookie("role");
 // console.log(role)
+
 const userContext = createContext();
 
-function App() {
-
-
- 
+function App() { 
 
     const [userRole , setUserRole ] = useState( role || false);
 

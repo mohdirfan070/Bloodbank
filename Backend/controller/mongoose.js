@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const ConnectDB = ()=>{
 
     mongoose.connect(process.env.MONGODB_URL).then((res)=>{
-       
+        
     }).catch((err)=>{
         console.log('Error in Mongoose')
         console.log(err);

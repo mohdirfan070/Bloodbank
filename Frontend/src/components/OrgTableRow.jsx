@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,7 +8,7 @@ import { TableCell, TableRow } from '@mui/material';
 import baseurl from '../assets/url';
 import axios from 'axios';
 import { toast } from "react-toastify";
-
+import { userContext } from "../App";
 const notify = (msg, type, theme, autoClose) => {
   toast(msg, { type, theme, autoClose });
 };
@@ -26,7 +26,7 @@ const deleteOrganization = async (id, role,  updateValue, updatorFunc) => {
 };
 
 export default function OrgTableRow(prop) {
-    
+  const { userRole, updateSetUserRole } = useContext(userContext);
   return (
     <TableRow className='hover:bg-gray-200'>
       <TableCell>{prop.index + 1}</TableCell>
@@ -37,12 +37,12 @@ export default function OrgTableRow(prop) {
         <a href={`https://api.whatsapp.com/send?phone=91${prop.organization.mobile}&text=${encodeURIComponent(`Hello ${prop.organization.name}.`)} `}>
           <WhatsAppIcon color='success' titleAccess='Whatsapp' />
         </a>
-        <SendIcon color='warning' className='-rotate-45 ml-2' titleAccess='Request' />
+        {/* <SendIcon color='warning' className='-rotate-45 ml-2' titleAccess='Request' /> */}
       </TableCell>
       <TableCell>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           <IconButton title='Delete Organization' onClick={() => deleteOrganization(prop.organization._id,"user", prop.update.updateTable, prop.update.updateSetUpdateTable)} aria-label="delete" size="medium">
-            <DeleteIcon color='error' fontSize="inherit" />
+           { userRole=="admin" && <DeleteIcon color='error' fontSize="inherit" />}
           </IconButton>
         </Stack>
       </TableCell>

@@ -4,7 +4,7 @@ const Admin = require('../models/Admin');
 
 // Fetch users with pagination
 const getUsers = async (req, res) => {
-    try {
+        try {
         // const { page  } = req.params;
         // const users = await User.find().limit(limit * 1).skip((page - 1) * limit).exec();
         // const count = await User.countDocuments();
@@ -12,6 +12,7 @@ const getUsers = async (req, res) => {
         const users = await User.find();
         const count = await User.countDocuments();
         res.json({ users, total:count,status:true});
+        
     }
     catch (err) {
         console.error(err);

@@ -1,5 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, Box, Typography, TextField, Button, Stack } from '@mui/material';
+import axios from 'axios';
+import baseurl from '../assets/url';
+
+import { toast } from "react-toastify";
+const notify = (msg, type, theme, autoClose) => {
+  toast(msg, { type, theme, autoClose });
+};
 
 const style = {
   position: 'absolute',
@@ -22,8 +29,33 @@ const getCurrentDate = () => {
   return `${year}-${month}-${day}`;
 };
 
-const RequestModal = ({ open, handleClose, handleRequest, userName }) => {
+const RequestModal = ({ open, handleClose, userName, donorId }) => {
   const currentDate = getCurrentDate();
+
+  const [date, setDate] = useState(currentDate);
+  const [time, setTime] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [msg, setMsg] = useState('');
+
+  const handleRequest = async () => {
+    try {
+      const requestData = {
+        // from: userId,
+        to: donorId,
+        date,
+        time,
+        quantity,
+        msg
+      };
+      
+      const response = await axios.post(baseurl+'/newrequest', requestData,{withCredentials:true});
+      if(!response.data.status) throw new Error("Request Failed");
+      notify(response.data.msg,"success","light",3000);
+      handleClose();
+    } catch (error) {
+      notify(error.message,"error","light",3000);
+    }
+  };
 
   return (
     <Modal
@@ -42,6 +74,8 @@ const RequestModal = ({ open, handleClose, handleRequest, userName }) => {
           label="Date"
           type="date"
           fullWidth
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
           InputLabelProps={{
             shrink: true,
           }}
@@ -55,6 +89,8 @@ const RequestModal = ({ open, handleClose, handleRequest, userName }) => {
           label="Time"
           type="time"
           fullWidth
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
           InputLabelProps={{
             shrink: true,
           }}
@@ -65,9 +101,20 @@ const RequestModal = ({ open, handleClose, handleRequest, userName }) => {
           label="Quantity (ml)"
           type="number"
           fullWidth
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
           InputLabelProps={{
             shrink: true,
           }}
+        />
+        <TextField
+          margin="normal"
+          id="msg"
+          label="Message"
+          type="text"
+          fullWidth
+          value={msg}
+          onChange={(e) => setMsg(e.target.value)}
         />
         <Stack direction="row" spacing={2} mt={2}>
           <Button variant="contained" color="primary" onClick={handleRequest}>

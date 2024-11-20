@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext,  useState } from "react";
 import UsersTable from "../../components/DataTable";
 import OrganizationsTable from "../../components/OrganizationTable";
 import { AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemText, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from "react-router-dom";
-
+import RequestTable from "../../components/RequestTable";
+import ErrorBoundary from "../../components/ErrorBoundary";
+import { userContext } from "../../App";
 export default function Dashboard() {
+
+  const { userRole, updateSetUserRole } = useContext(userContext);
   const [item, setItem] = useState("donor");
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -17,12 +21,15 @@ export default function Dashboard() {
     <div>
       <Typography className="text-center p-4 bg-blue-800 text-xl text-white select-none">Dashboard</Typography>
       <List>
-        <ListItem button onClick={() => { setItem("donor"); setDrawerOpen(false); }}>
+        <ListItem className="hover:cursor-pointer"  button onClick={() => { setItem("donor"); setDrawerOpen(false); }}>
           <ListItemText primary="Donor" />
         </ListItem>
-        <ListItem button onClick={() => { setItem("org"); setDrawerOpen(false); }}>
+        <ListItem className="hover:cursor-pointer" button onClick={() => { setItem("org"); setDrawerOpen(false); }}>
           <ListItemText primary="Organization" />
         </ListItem>
+       { userRole=="admin" && <ListItem className="hover:cursor-pointer" button onClick={() => { setItem("requests"); setDrawerOpen(false); }}>
+          <ListItemText primary="Requests" />
+        </ListItem>}
       </List>
     </div>
   );
@@ -55,7 +62,7 @@ export default function Dashboard() {
         {drawer}
       </div>
       <div className="w-full mt-16 md:mt-0">
-        {item === "donor" ? <UsersTable /> : item === "org" ? <OrganizationsTable /> : ""}
+        {item === "donor" ? <UsersTable /> : item === "org" ? <OrganizationsTable /> : item=="requests" ? <ErrorBoundary> <RequestTable /> </ErrorBoundary>  : " "}
       </div>
     </div>
   );

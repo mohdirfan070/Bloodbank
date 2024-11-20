@@ -7,9 +7,9 @@ const adminMiddleware = async (req, res, next) => {
         // console.log(cookie)  
         const token  = cookie.split(";")[0].split(' ')[1];
         // console.log(token)
-        const isAuth = jwt.verify(token,process.env.JWT_SECRET);
+        const isAuth = jwt.verify(token , process.env.JWT_SECRET);
         // console.log(isAuth)
-        
+
         await Admin.findOne({email:isAuth.email},{id:isAuth.id}).then((result)=>{
             if(!result) throw result;
             req.dataFromAuth = { userData : isAuth };

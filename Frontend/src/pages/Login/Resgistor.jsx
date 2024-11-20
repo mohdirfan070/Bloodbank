@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from 'axios'
+import axios from "axios";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -20,26 +20,28 @@ const notify = (msg, type, theme, autoClose) => {
 const setCookie = (name, value, days) => {
   let expires = "";
   if (days) {
-    expires = "; expires="+172800000;
+    expires = "; expires=" + 172800000;
   }
   document.cookie = name + "=" + (value || "") + expires + "; path=/";
 };
 
 import baseurl from "../../assets/url";
 import MultiStepForm from "./MultiStepForm";
-const registorFunc = async (data , func ) =>{
+const registorFunc = async (data, func) => {
   try {
     // console.log(data)
-      const result  = await axios.post(baseurl+"/registor", data , {withCredentials:true});
-      if(!result.data.status) throw result;
-      notify(result.data.msg, "success", "light", 3000);
-      // setCookie('isLogin', true);
-      func('/login');
+    const result = await axios.post(baseurl + "/registor", data, {
+      withCredentials: true,
+    });
+    if (!result.data.status) throw result;
+    notify(result.data.msg, "success", "light", 3000);
+    // setCookie('isLogin', true);
+    func("/login");
   } catch (error) {
     // console.log(error);
-    notify(error.response.data.msg , "error" , "light" , 3000 )
+    notify(error.response.data.msg, "error", "light", 3000);
   }
-}
+};
 
 const Registor = () => {
   const navigate = useNavigate();
@@ -54,11 +56,10 @@ const Registor = () => {
     healthHistory: "no",
   });
 
-
-  const onSubmit =async (data) => {
-        // console.log({ ...data, ...selectData,user});
-          await registorFunc({ ...data, ...selectData , user}, navigate);
-      };
+  const onSubmit = async (data) => {
+    // console.log({ ...data, ...selectData,user});
+    await registorFunc({ ...data, ...selectData, user }, navigate);
+  };
   return (
     <Box className="max-w-md mx-auto mt-10 p-4 shadow-lg rounded-lg">
       <h2 className="text-2xl font-semibold mb-6  font1">Resgistor</h2>
@@ -133,7 +134,11 @@ const Registor = () => {
             label="Mobile"
             variant="outlined"
             margin="normal"
-            {...register("mobile",  { required: "Mobile is required" , maxLength:{value:10 , message:"Max 10 Digits"} , minLength:{value:10 , message : "Min 10 Digits"} }  )}
+            {...register("mobile", {
+              required: "Mobile is required",
+              maxLength: { value: 10, message: "Max 10 Digits" },
+              minLength: { value: 10, message: "Min 10 Digits" },
+            })}
             error={!!errors.mobile}
             helperText={errors.mobile ? errors.mobile.message : ""}
           />{" "}
@@ -214,22 +219,22 @@ const Registor = () => {
             variant="outlined"
             margin="normal"
             type="date"
-            
-            {...register("lastDonateDate" ,{max : new Date(Date.now()).getTime()} )}
+            {...register("lastDonateDate", {
+              max: new Date(Date.now()).getTime(),
+            })}
             InputLabelProps={{ shrink: true }}
           />{" "}
-
-          {
-          selectData.gender=="female" && <TextField
-            fullWidth
-            label="Menstrual Start Date "
-            variant="outlined"
-            margin="normal"
-            type="date"
-            {...register("menstrualDate ")}
-            InputLabelProps={{ shrink: true }}
-          />
-        } 
+          {selectData.gender == "female" && (
+            <TextField
+              fullWidth
+              label="Menstrual Start Date "
+              variant="outlined"
+              margin="normal"
+              type="date"
+              {...register("menstrualDate ")}
+              InputLabelProps={{ shrink: true }}
+            />
+          )}
           <FormControl component="fieldset" margin="normal">
             {" "}
             <FormLabel component="legend">
@@ -258,7 +263,8 @@ const Registor = () => {
               <p className="text-red-500">{errors.healthHistory.message}</p>
             )}{" "}
           </FormControl>{" "}
-          <Button  size="large"
+          <Button
+            size="large"
             type="submit"
             variant="contained"
             color="primary"
@@ -272,7 +278,7 @@ const Registor = () => {
       )}
       {user == "user" && (
         <form onSubmit={handleSubmit(onSubmit)}>
-           <TextField
+          <TextField
             fullWidth
             label="Name"
             variant="outlined"
@@ -286,16 +292,24 @@ const Registor = () => {
             label="Organization Name"
             variant="outlined"
             margin="normal"
-            {...register("organizationName", { required: "Organization Name is required" })}
+            {...register("organizationName", {
+              required: "Organization Name is required",
+            })}
             error={!!errors.organizationName}
-            helperText={errors.organizationName ? errors.organizationName.message : ""}
+            helperText={
+              errors.organizationName ? errors.organizationName.message : ""
+            }
           />{" "}
           <TextField
             fullWidth
             label="Mobile"
             variant="outlined"
             margin="normal"
-            {...register("mobile",  { required: "Mobile is required" , maxLength:{value:10 , message:"Max 10 Digits"} , minLength:{value:10 , message : "Min 10 Digits"} })}
+            {...register("mobile", {
+              required: "Mobile is required",
+              maxLength: { value: 10, message: "Max 10 Digits" },
+              minLength: { value: 10, message: "Min 10 Digits" },
+            })}
             error={!!errors.mobile}
             helperText={errors.mobile ? errors.mobile.message : ""}
           />{" "}
@@ -328,7 +342,8 @@ const Registor = () => {
             error={!!errors.address}
             helperText={errors.address ? errors.address.message : ""}
           />{" "}
-          <Button  size="large"
+          <Button
+            size="large"
             type="submit"
             variant="contained"
             color="primary"
@@ -339,7 +354,7 @@ const Registor = () => {
           </Button>
         </form>
       )}
-       {user == "admin" && (
+      {user == "admin" && (
         <form onSubmit={handleSubmit(onSubmit)}>
           <TextField
             fullWidth
@@ -365,20 +380,28 @@ const Registor = () => {
             type="password"
             variant="outlined"
             margin="normal"
-            {...register("password", { required: "Password is required" })}
+            {...register(
+              "password",
+              { minLength: 6 },
+              { required: "Password is required" }
+            )}
             error={!!errors.password}
             helperText={errors.password ? errors.password.message : ""}
           />{" "}
-            <TextField
-              fullWidth
-              label="Mobile"
-              variant="outlined"
-              margin="normal"
-              {...register("mobile", { required: "Mobile is required" , maxLength:{value:10 , message:"Max 10 Digits"} , minLength:{value:10 , message : "Min 10 Digits"} })}
-              error={!!errors.mobile}
-              helperText={errors.mobile ? errors.mobile.message : ""}
-            />{" "}
-         <TextField
+          <TextField
+            fullWidth
+            label="Mobile"
+            variant="outlined"
+            margin="normal"
+            {...register("mobile", {
+              required: "Mobile is required",
+              maxLength: { value: 10, message: "Max 10 Digits" },
+              minLength: { value: 10, message: "Min 10 Digits" },
+            })}
+            error={!!errors.mobile}
+            helperText={errors.mobile ? errors.mobile.message : ""}
+          />{" "}
+          <TextField
             fullWidth
             label="Secret Key"
             type="password"
@@ -388,7 +411,8 @@ const Registor = () => {
             error={!!errors.secretKey}
             helperText={errors.secretKey ? errors.secretKey.message : ""}
           />{" "}
-          <Button  size="large"
+          <Button
+            size="large"
             type="submit"
             variant="contained"
             color="primary"
